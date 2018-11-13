@@ -33,5 +33,5 @@ t2.start()
 
 # Auf die Terminierung beider Threads warten (endlos)
 # BLOCKIERENDER AUFRUF
-t1.join()
+#t1.join()
 t2.join()

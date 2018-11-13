@@ -22,16 +22,25 @@ class WorkerProcess(Process):
         Ändert den Wert und das Array
         :return: None
         """
-        self.v.value = 1234
-        for i in range(len(self.arr)):
-            self.arr[i] = -self.arr[i]
+        with self.v.get_lock():
+            self.v.value += 2
+        with self.arr:
+            for i in range(len(self.arr)):
+                self.arr[i] = -self.arr[i]
 
 
 if __name__ == "__main__":
     v = Value('d', 0.0)
     arr = Array('i', range(10))
-    worker = WorkerProcess(v, arr)
-    worker.start()
-    worker.join()
+
+    workers = []
+    for i in range(400):
+        w = WorkerProcess(v, arr)
+        workers.append(w)
+        w.start()
+
+    for w in workers:
+        w.join()
+
     print(v.value)
     print(arr[:])

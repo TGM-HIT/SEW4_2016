@@ -23,10 +23,11 @@ def sayhello(lock, num):
 
 
 if __name__ == "__main__":
-    # File löschen, falls es bereits existiert
+    # File loeschen, falls es bereits existiert
     if os.path.isfile("foo.txt"):
         os.remove("foo.txt")
     lock = Lock()
     # Zehn Prozesse erstellen und starten
     for num in range(10):
+        print("Starting Process %i" % (num))
         Process(target=sayhello, args=(lock, num)).start()

@@ -1,0 +1,3 @@
+[submodule "Threading_Einfuehrung/java-concurrency-examples"]
+	path = Threading_Einfuehrung/java-concurrency-examples
+	url = https://github.com/callicoder/java-concurrency-examples.git

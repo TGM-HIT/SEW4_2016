@@ -42,7 +42,7 @@ class CounterThread(threading.Thread):
         """
         for i in range(1, self.count_to):
             print('Thread %d: Current count is %d' % (self.thread_number, i))
-            time.sleep(0.01)
+            #time.sleep(0.01)
 
 
 # Fünf Threads erstellen und in einer Liste speichern

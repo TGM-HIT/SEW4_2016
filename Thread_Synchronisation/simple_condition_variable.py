@@ -37,7 +37,7 @@ class Producer(threading.Thread):
                 print("Producer gibt condition wieder frei")
                 # Schlafende Threads wecken und Bedingungsvariable freigeben
                 self.condition.notify()
-            time.sleep(0.01)
+            time.sleep(2)
 
 
 class Consumer(threading.Thread):

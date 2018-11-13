@@ -39,14 +39,15 @@ class ReceiverProcess(Process):
         Empfängt die Nachricht und gibt sie aus.
         :return: None
         """
-        print(self.queue.get())
+        while not self.queue.empty():
+            print(self.queue.get())
 
 
 if __name__ == "__main__":
     q = Queue()
-    receiver = ReceiverProcess(q)
-    receiver.start()
     sender = SenderProcess(q)
     sender.start()
+    receiver = ReceiverProcess(q)
+    receiver.start()
     receiver.join()
     sender.join()
