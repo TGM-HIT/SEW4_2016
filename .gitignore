@@ -1,4 +1,7 @@
 .idea
+.gradle
+*.class
+build
 __pycache__
 *.pyc
 

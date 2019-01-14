@@ -27,30 +27,65 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 package server;
 
 import java.net.*;
 import java.io.*;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class KKMultiServer {
-  public static void main(String[] args) throws IOException {
+    static boolean listening = true;
+    static int portNumber = 0;
 
-    if (args.length != 1) {
-      System.err.println("Usage: java KKMultiServer <port number>");
-      System.exit(1);
+    public static void main(String[] args) throws IOException {
+
+        if (args.length != 1) {
+            System.err.println("Usage: java KKMultiServer <port number>");
+            System.exit(1);
+        }
+
+        portNumber = Integer.parseInt(args[0]);
+
+        new Thread(new ShutdownThread()).start();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        try (ServerSocket serverSocket = new ServerSocket(portNumber);
+             ) {
+            while (listening) {
+                executorService.submit(new KKMultiServerThread(serverSocket.accept()));
+            }
+            System.out.println("Shuting down!");
+
+            executorService.shutdownNow();
+
+        } catch (IOException e) {
+            System.err.println("Could not listen on port " + portNumber);
+            System.exit(-1);
+        } finally {
+            executorService.shutdownNow();
+        }
     }
+}
 
-    int portNumber = Integer.parseInt(args[0]);
-    boolean listening = true;
-
-    try (ServerSocket serverSocket = new ServerSocket(portNumber)) { 
-      while (listening) {
-        new KKMultiServerThread(serverSocket.accept()).start();
-      }
-    } catch (IOException e) {
-      System.err.println("Could not listen on port " + portNumber);
-      System.exit(-1);
+class ShutdownThread implements Runnable {
+    @Override
+    public void run() {
+        String input = "";
+        try (BufferedReader stdIn =
+                     new BufferedReader(new InputStreamReader(System.in))) {
+            while ((input = stdIn.readLine()) != null) {
+                if (input.equals("!stop")) {
+                    KKMultiServer.listening = false;
+                    System.out.println("Ready to shutdown ...");
+                    Socket client = new Socket("localhost", KKMultiServer.portNumber);
+                    client.close();
+                    break;
+                }
+            }
+        } catch (Exception e) {}
     }
-  }
 }

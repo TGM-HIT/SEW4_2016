@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 package server;
 
 import java.net.*;
@@ -41,7 +41,7 @@ public class KKMultiServerThread extends Thread {
         super("KKMultiServerThread");
         this.socket = socket;
     }
-    
+
     public void run() {
 
         try (
@@ -50,6 +50,7 @@ public class KKMultiServerThread extends Thread {
                 new InputStreamReader(
                     socket.getInputStream()));
         ) {
+
             String inputLine, outputLine;
             KnockKnockProtocol kkp = new KnockKnockProtocol();
             outputLine = kkp.processInput(null);
