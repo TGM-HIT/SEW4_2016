@@ -1,0 +1,7 @@
+# "*TEMPLATE*"
+
+## Aufgabenstellung
+
+## Implementierung
+
+## Quellen
